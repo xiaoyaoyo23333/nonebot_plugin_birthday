@@ -1,0 +1,2 @@
+# nonebot_plugin_birthday
+一个偏个人用的群聊生日推送插件
