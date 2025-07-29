@@ -316,12 +316,18 @@ async def handle_mod(event: GroupMessageEvent, args: Message = CommandArg()):
     save_birthdays(event.group_id, data)
     
     nickname = await get_member_nickname(event.group_id, int(qq))
-    msg = await build_avatar_message(int(qq), f"✅ 已修改 {nickname}({qq}) 的生日: {old_date} → {date_str}")
+    # 修改后的消息格式
+    msg = await build_avatar_message(
+        int(qq),
+        f"✅ 已修改 {nickname}({qq}) 的生日:\n"
+        f"📅 {old_date}(old) → {date_str}(new)"
+    )
     await mod_cmd.send(msg)
     
     if is_today:
         await asyncio.sleep(1)
         await send_birthday_notice(event.group_id, int(qq), date_str)
+
 
 @del_cmd.handle()
 async def handle_del(event: GroupMessageEvent, args: Message = CommandArg()):
@@ -353,41 +359,40 @@ async def handle_list(event: GroupMessageEvent):
     data = load_birthdays(event.group_id)
     
     if not data:
-        await list_cmd.finish("当前群组没有记录任何生日信息")
+        await list_cmd.finish(f"当前群聊({event.group_id})没有记录任何生日信息")
 
     # 按日期排序
     sorted_birthdays = sorted(data.items(), key=lambda x: x[1])
-
-    if len(sorted_birthdays) <= 5:
-        # 数量≤5时，普通发送
-        msg = Message(f"🎂 {nickname}的生日列表（按日期排序）：\n")
-        for qq, date in sorted_birthdays:
-            try:
-                member_nickname = await get_member_nickname(event.group_id, int(qq))
-                msg += f"{date} - {member_nickname}({qq})\n"
-            except Exception as e:
-                msg += f"{date} - {qq}\n"
+    total_records = len(sorted_birthdays)
+    
+    try:
+        bot = get_bot()
+        # 分段处理，每100条一个合并转发
+        chunks = [sorted_birthdays[i:i+100] for i in range(0, len(sorted_birthdays), 100)]
+        total_pages = len(chunks)
         
-        await list_cmd.finish(msg)
-    else:
-        # 数量>5时，使用合并转发
-        try:
-            bot = get_bot()
+        for chunk_index, chunk in enumerate(chunks):
             forward_msgs = []
             
-            # 添加标题消息（使用.env配置的nickname）
+            # 构建更详细的标题消息
+            title_content = Message(
+                f"🎂 本群({event.group_id})生日列表\n"
+                f"📊 共 {total_records} 条记录\n"
+                f"📑 第 {chunk_index+1}/{total_pages} 页（每页最多100条记录）"
+            )
+            
             title_msg = {
                 "type": "node",
                 "data": {
                     "name": nickname,  # 使用配置的昵称
                     "uin": bot.self_id,
-                    "content": Message(f"🎂 本群({event.group_id})生日列表（共{len(sorted_birthdays)}条）")
+                    "content": title_content
                 }
             }
             forward_msgs.append(title_msg)
             
             # 添加每条生日记录
-            for qq, date in sorted_birthdays:
+            for qq, date in chunk:
                 try:
                     member_nickname = await get_member_nickname(event.group_id, int(qq))
                     content = Message(f"📅 {date}\n🎂 {member_nickname}({qq})")
@@ -409,8 +414,16 @@ async def handle_list(event: GroupMessageEvent):
                 group_id=event.group_id,
                 messages=forward_msgs
             )
-        except Exception as e:
-            await list_cmd.finish("发送生日列表失败，请稍后再试")
+            
+            # 如果有多段，发送间隔1秒避免刷屏
+            if total_pages > 1 and chunk_index < total_pages-1:
+                await asyncio.sleep(1)
+                
+    except Exception as e:
+        logger.error(f"发送生日列表失败: {e}")
+        await list_cmd.finish("发送生日列表失败，请稍后再试")
+
+
 
 
 # 启动系统 
@@ -418,3 +431,4 @@ async def handle_list(event: GroupMessageEvent):
 async def startup():
     asyncio.create_task(birthday_scheduler())
     logger.success("生日插件已启动")
+
