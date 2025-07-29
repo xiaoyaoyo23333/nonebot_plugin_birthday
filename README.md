@@ -30,3 +30,11 @@
 ### 添加定期生日，生日当天0时0分bot准时推送生日通知：
 ![222](https://github.com/xiaoyaoyo23333/nonebot_plugin_birthday/blob/main/0325114BAA7DE5453F9D6AFD83F38EB5.png)<br>
 ![333](https://github.com/xiaoyaoyo23333/nonebot_plugin_birthday/blob/main/1E9375C2E02D9C2475539DA7DBFA4380.png)<br>
+<br>
+### 修改生日：
+![444](https://github.com/xiaoyaoyo23333/nonebot_plugin_birthday/blob/main/1A9363836C6DFBC7DF8FEF2A18EABA06.png)<br>
+<br>
+### 查看群聊生日列表：
+![555](https://github.com/xiaoyaoyo23333/nonebot_plugin_birthday/blob/main/4C0D2EDA2B05BD4852F46A6AF35E0987.png)<br>
+![666](https://github.com/xiaoyaoyo23333/nonebot_plugin_birthday/blob/main/66BE8CF2B34A74A5610765D4CBAA1381.png)<br>
+<br>
