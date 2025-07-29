@@ -24,4 +24,9 @@
 数据存储：/data/bitrhday/各群聊单独的.json文件
 
 ## 使用示例：<br>
-![111](https://github.com/xiaoyaoyo23333/nonebot_plugin_birthday/blob/main/3A17FCD5B904F4F25EA2CCFD3C0EBC41.jpg)
+生日当天添加生日，bot即时推送生日通知：
+![111](https://github.com/xiaoyaoyo23333/nonebot_plugin_birthday/blob/main/3A17FCD5B904F4F25EA2CCFD3C0EBC41.jpg)<br>
+<br>
+添加定期生日，生日当天0时0分bot准时推送生日通知：
+![222](https://github.com/xiaoyaoyo23333/nonebot_plugin_birthday/blob/main/0325114BAA7DE5453F9D6AFD83F38EB5.png)<br>
+![333](https://github.com/xiaoyaoyo23333/nonebot_plugin_birthday/blob/main/1E9375C2E02D9C2475539DA7DBFA4380.png)<br>
