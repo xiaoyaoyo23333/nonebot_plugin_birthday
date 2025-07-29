@@ -24,4 +24,4 @@
 数据存储：/data/bitrhday/各群聊单独的.json文件
 
 ## 使用示例：<br>
-！[] ()
+！[] (3A17FCD5B904F4F25EA2CCFD3C0EBC41.jpg)
